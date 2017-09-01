@@ -3,8 +3,9 @@ numpy.set_printoptions(suppress=True)
 numpy.set_printoptions(threshold=numpy.inf)
 numpy.random.seed(1)
 
-neuronsInput = 22
-neuronsOutput = 5875
+#0.15336
+neuronsInput = 21
+neuronsOutput = 1
 neuronsHidden = 2
 nrHidden = 1
 
@@ -38,14 +39,18 @@ def readData(fileName):
     i = 0
     for line in f:
         data.append(line.strip().split(','))
+        #print("One line")
+        q = []
         for j in range(0, len(data[i]) - 1):
+            #print(data[i][j])
+            q.append(float(data[i][j]))
             data[i][j] = float(data[i][j])
-            out.append(float(data[i][j]))
+        out.append(q)
         i += 1
-    return data
+    return out
 
 def normaliseData(trainData):
-    for j in range(len(trainData[0][:-1])):
+    for j in range(len(trainData[0])):
         summ = 0.0
         for i in range(len(trainData)):
             summ += trainData[i][j]
@@ -58,16 +63,38 @@ def normaliseData(trainData):
             trainData[i][j] = (trainData[i][j] - mean) / deviation
     return trainData
 
+"""
 def checkGlobalErr(err):
     sumerror = 0
     for j in err:
         for i in j:
             sumerror += sum(i)
             accuracy = 1 - (sumerror / len(err))
+            print(accuracy)
             if accuracy < 1:
                 return True
             else:
                 return False
+
+"""
+oldacc = 0
+
+def checkGlobalErr(err):
+    global oldacc
+    sumerror = 0
+    for j in err:
+        for i in j:
+            sumerror += sum(i)
+    accuracy = 1 - (sumerror / len(err))
+    #print(accuracy)
+    #print(oldacc)
+    if oldacc == accuracy:
+        print(accuracy)
+    if accuracy < 1:
+        return True
+    else:
+        oldacc = accuracy
+        return False
 
 def writeData(filename, str):
     f = open(filename, 'w')
@@ -83,15 +110,14 @@ stop = False
 i = 0
 synapses = createSynapses()
 
-while stop == False:
-    print(i)
+while stop == False and i < 3000:
     output = []
     error = []
     adjustments = []
     for j in range(neuronsHidden):
         output.append(activate(input, synapses[j]))
     for j in range(neuronsHidden):
-        error.append(trainingOutput - output[j])
+        error.append(trainingOutput[j] - output[j])
     for j in range(len(error)):
         adjustments.append(numpy.dot(input.T, error[j]*derivate(output[j])))
     for j in range(len(error)):
@@ -101,4 +127,4 @@ while stop == False:
 
 # TO DO: LESS INPUT SYNAPSES AND OUTPUT
 # TO DO: OOP
-writeData("Learning.txt", str(activate([1,40,0,19.701,28.695,35.389,0.00481,2.462e-005,0.00205,0.00208,0.00616,0.01675,0.181,0.00734,0.00844,0.01458,0.02202,0.02022,23.047,0.46222,0.54405,0.21014], synapses)))
+writeData("Learning.txt", str(activate([42,61,0,170.73,20.513,31.513,0.00282,2.11e-005,0.00135,0.00166,0.00406,0.01907,0.171,0.00946,0.01154,0.0147,0.02839,0.008172,23.259,0.58608,0.57077], synapses)))
