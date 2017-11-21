@@ -4,6 +4,8 @@ numpy.set_printoptions(threshold=numpy.inf)
 numpy.random.seed(1)
 
 #0.15336
+#0.53984
+#0.17793
 neuronsInput = 21
 neuronsOutput = 1
 neuronsHidden = 2
@@ -85,16 +87,13 @@ def checkGlobalErr(err):
     for j in err:
         for i in j:
             sumerror += sum(i)
-    accuracy = 1 - (sumerror / len(err))
+        accuracy = 1 - (sumerror / len(err))
     #print(accuracy)
     #print(oldacc)
-    if oldacc == accuracy:
-        print(accuracy)
-    if accuracy < 1:
-        return True
-    else:
-        oldacc = accuracy
-        return False
+        if accuracy < 1:
+            return True
+        else:
+            return False
 
 def writeData(filename, str):
     f = open(filename, 'w')
@@ -110,7 +109,7 @@ stop = False
 i = 0
 synapses = createSynapses()
 
-while stop == False and i < 3000:
+while stop == False and i < 10000:
     output = []
     error = []
     adjustments = []
@@ -125,6 +124,10 @@ while stop == False and i < 3000:
     i+=1
     stop = checkGlobalErr(error)
 
+writeData("Synapses.txt", str(synapses))
 # TO DO: LESS INPUT SYNAPSES AND OUTPUT
 # TO DO: OOP
-writeData("Learning.txt", str(activate([42,61,0,170.73,20.513,31.513,0.00282,2.11e-005,0.00135,0.00166,0.00406,0.01907,0.171,0.00946,0.01154,0.0147,0.02839,0.008172,23.259,0.58608,0.57077], synapses)))
+
+writeData("Learning.txt", str(activate([
+
+23,59,1,58.396,13.788,24.767,0.00416,2.286e-005,0.00221,0.00233,0.00664,0.02131,0.187,0.01146,0.01235,0.01708,0.03437,0.012378,22.712,0.42162,0.70732], synapses)))
